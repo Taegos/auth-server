@@ -1,5 +1,5 @@
 # auth-server
-Simple auth server that can be integrated in more complex systems, written in Python with Flask.
+Simple auth server that can be integrated in a distributed system, written in Python with Flask.
 
 Supports
   - Account creation
