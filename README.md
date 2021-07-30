@@ -10,7 +10,8 @@ Supports
  In other words, systems that 'trust' this app can verify that a successful login attempt has occured.
  
 # Setup
-Windows: python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+For windows: python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+For linux: ??????????????????????
  
 # Run
 python server.py 
