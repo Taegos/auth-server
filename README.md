@@ -9,3 +9,9 @@ Supports
  The token can be verified using a public key provided at the index (default http://127.0.0.1:5000/).
  In other words, systems that 'trust' this app can verify that a successful login attempt has occured.
  
+# Setup
+- Windows: python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+- Linux: ??????????????????????
+ 
+# Run
+python server.py 
