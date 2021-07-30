@@ -1,7 +1,5 @@
 *.db
 *.pem
 __pycache__
-Scripts/
-Include/
-Lib/
+.venv/
 pyvenv.cfg
