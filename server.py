@@ -19,4 +19,4 @@ app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(index, url_prefix='/')
 
 if __name__ == '__main__':
-    app.run(Config.HOST, os.environ['PORT'])
+    app.run('127.0.0.1', 5000)
