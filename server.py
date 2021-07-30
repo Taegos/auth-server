@@ -4,7 +4,7 @@ from db import db
 from blueprints.account import account
 from blueprints.auth import auth
 from blueprints.index import index
-from config import Config
+#from config import Config
 import os
 
 #https://git-secret.io/
@@ -19,4 +19,4 @@ app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(index, url_prefix='/')
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', 5000)
+    app.run(os.environ['HOST'], os.environ['PORT'])
