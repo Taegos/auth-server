@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 35%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Transatica auth-server</h1>
+    <h3>Public key:</h3>
+    <textarea id="public-key-area" cols="70" rows="10" style="resize: none;" readonly>{{data.public_key}}</textarea>
+    <br><button onclick="copyToClipboard()" >Copy to clipboard</button>
+
+    <h3>Accounts:</h3>
+    
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+      </tr>
+      {% for account in data.accounts %}
+      <tr>
+        <th>{{account.id}}</th>
+        <th>{{account.email}}</th>
+      </tr>
+      {% endfor %}
+    </table>
+  <script>
+    function copyToClipboard() {
+      let textarea = document.getElementById("public-key-area");
+      textarea.select();
+      document.execCommand("copy");
+      alert("Copied public key to clipboard!")
+    }
+  </script>
+  </body>
+</html>
