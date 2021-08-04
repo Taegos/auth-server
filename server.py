@@ -10,6 +10,7 @@ import os
 #https://git-secret.io/
 #https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server
 #https://stackoverflow.com/questions/9554087/setting-an-environment-variable-in-virtualenv
+#https://devcenter.heroku.com/articles/sqlite3
 
 db.create_tables([Account])
 
