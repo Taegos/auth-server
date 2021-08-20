@@ -1,6 +1,7 @@
 from flask import Flask
 from blueprints.account import account
 from blueprints.index import index
+from account_model import Account
 import os
 
 app = Flask(__name__)
@@ -25,6 +26,9 @@ app.config.update(
     # gmail authentication
     MAIL_USERNAME = 'project.shyft@gmail.com',
     MAIL_PASSWORD = 'wowsar132',
+
+    # PostgreSQL
+    POSTGRESQL_PASSWORD = '123'
 )
 
 
@@ -32,10 +36,8 @@ app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(index, url_prefix='/')
 
 if __name__ == '__main__':
-
-    host = '127.0.0.1'
-    port = 5000
-    
+    host = 'localhost'
+    port = '5000'
     # When deployed to Heroku, host and port is provided as environment variables
     if 'HOST' in os.environ and 'PORT' in os.environ:
         host = os.environ['HOST']
