@@ -24,13 +24,17 @@
     
     <table>
       <tr>
-        <th>ID</th>
+        <th>Display Name</th>
         <th>Email</th>
+        <th>Confirmed</th>
+        <th>Admin</th>
       </tr>
       {% for account in data.accounts %}
       <tr>
-        <th>{{account.id}}</th>
+        <th>{{account.display_name}}</th>
         <th>{{account.email}}</th>
+        <th>{{account.email_confirmed}}</th>
+        <th>{{account.is_admin}}</th>
       </tr>
       {% endfor %}
     </table>

@@ -1,23 +1,34 @@
 from flask import Flask
-from account_model import Account
-from db import db
 from blueprints.account import account
-from blueprints.auth import auth
 from blueprints.index import index
 import os
 
-# Interesting stuff to consider
-#https://git-secret.io/
-#https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server
-#https://stackoverflow.com/questions/9554087/setting-an-environment-variable-in-virtualenv
-#https://devcenter.heroku.com/articles/sqlite3
-
-db.create_tables([Account])
-
 app = Flask(__name__)
 
+app.config.update(
+    
+    # main config
+    SECRET_KEY = 'zxcasdq12312gteshdkea',
+    SECURITY_PASSWORD_SALT = 'xogyj30gmjew9o39tjksxmpfkltn4vy9s',
+    DEBUG = False,
+    #BCRYPT_LOG_ROUNDS = 13
+    #WTF_CSRF_ENABLED = True
+    #DEBUG_TB_ENABLED = False
+    #DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+    # mail settings
+    MAIL_SERVER = 'smtp.googlemail.com',
+    MAIL_PORT = 465,
+    MAIL_USE_TLS = False,
+    MAIL_USE_SSL = True,
+
+    # gmail authentication
+    MAIL_USERNAME = 'project.shyft@gmail.com',
+    MAIL_PASSWORD = 'wowsar132',
+)
+
+
 app.register_blueprint(account, url_prefix='/account')
-app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(index, url_prefix='/')
 
 if __name__ == '__main__':

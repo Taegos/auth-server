@@ -1,4 +1,4 @@
-from peewee import *
+import pymongo
 
-db = SqliteDatabase('database.db')
-
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client.auth_server
