@@ -1,11 +1,11 @@
 import os
-import urllib.parse
 import time
 from peewee import *
+from urllib.parse import urlparse
 
 if os.environ.get('DATABASE_URL'):
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    db = urllib.parse(DATABASE_URL)
+    db = urlparse(DATABASE_URL)
     user = db.username
     password = db.password
     path = db.path[1:]
