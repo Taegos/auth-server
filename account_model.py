@@ -3,6 +3,7 @@ import time
 from peewee import *
 from urllib.parse import urlparse
 
+deployed = False
 if os.environ.get('DATABASE_URL'):
     DATABASE_URL = os.environ.get('DATABASE_URL')
     db = urlparse(DATABASE_URL)
@@ -12,6 +13,7 @@ if os.environ.get('DATABASE_URL'):
     host = db.hostname
     port = db.port
     database = PostgresqlDatabase(path, user=user, password=password, host=host, port=port, sslmode='require')
+    deployed = True
 else:
     database = PostgresqlDatabase('postgres', user='postgres', password="123")
 
@@ -29,6 +31,7 @@ class Account(BaseModel):
 
 try:
     database.create_tables([Account])
-    database.drop_tables(Account)
+    if not deployed:
+        database.drop_tables(Account)
 except IntegrityError:
     pass
