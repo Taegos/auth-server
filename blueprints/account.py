@@ -40,7 +40,7 @@ def register():
 
     # Delete unconfirmed accounts with same email or display name
     Account.delete().where(
-        Account.display_name == display_name and 
+        Account.display_name == display_name, 
         Account.email_confirmed == False).execute()
     
     try:
@@ -50,7 +50,6 @@ def register():
             display_name=display_name,
         )
     except Exception as e:
-        print(e)
         return str(e), 400
 
     if send_verification_email(email):
