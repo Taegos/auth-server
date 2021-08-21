@@ -28,4 +28,7 @@ class Account(BaseModel):
     email_confirmed = BooleanField(default=False)
     registered_at = IntegerField (default=(int)(time.time()))
 
-database.create_tables([Account])
+try:
+    database.create_tables([Account])
+except IntegrityError:
+    pass
