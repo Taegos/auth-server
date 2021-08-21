@@ -40,7 +40,6 @@ def register():
 
     # Delete unconfirmed accounts with same email or display name
     Account.delete().where(
-        Account.email == email or 
         Account.display_name == display_name and 
         Account.email_confirmed == False).execute()
     

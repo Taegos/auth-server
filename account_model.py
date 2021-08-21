@@ -15,7 +15,6 @@ if os.environ.get('DATABASE_URL'):
 else:
     database = PostgresqlDatabase('postgres', user='postgres', password="123")
 
-
 class BaseModel(Model):
     class Meta:
         database = database
@@ -30,5 +29,6 @@ class Account(BaseModel):
 
 try:
     database.create_tables([Account])
+    database.drop_tables(Account)
 except IntegrityError:
     pass
