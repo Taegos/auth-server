@@ -49,8 +49,8 @@ def register():
             password_hash=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             display_name=display_name,
         )
-    except Exception as e:
-        return str(e), 400
+    except Exception:
+        return "Account with that email already exists", 400
 
     if send_verification_email(email):
         return Response(status=201)
