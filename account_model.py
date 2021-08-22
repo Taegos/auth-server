@@ -31,7 +31,7 @@ class Account(BaseModel):
 
 try:
     database.create_tables([Account])
-    if not deployed:
-        database.drop_tables(Account)
+    #if not deployed:
+    database.drop_tables(Account)
 except IntegrityError:
     pass
