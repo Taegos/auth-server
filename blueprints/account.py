@@ -21,7 +21,8 @@ def send_verification_email(email):
     try:
         mail.send(msg)
         return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 @account.route('register', methods=['POST'])
@@ -43,18 +44,19 @@ def register():
         Account.display_name == display_name, 
         Account.email_confirmed == False).execute()
     
-    try:
-        Account.create(
-            email=email,
-            password_hash=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
-            display_name=display_name,
-        )
-    except Exception:
-        return "Account with that email already exists", 400
-
     if send_verification_email(email):
-        return Response(status=201)
-    return "Failed to send verification mail", 400
+        try:
+            Account.create(
+                email=email,
+                password_hash=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
+                display_name=display_name,
+            )
+        except Exception:
+            return "Account with that email already exists", 400
+    else:
+        return "Failed to send verification mail", 400
+
+    return f"Registration succeeded, sent verification mail to '{email}'", 201
 
 @account.route('login', methods=['POST'])
 def login():

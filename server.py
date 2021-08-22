@@ -24,8 +24,8 @@ app.config.update(
     MAIL_USE_SSL = True,
 
     # gmail authentication
-    MAIL_USERNAME = 'project.shyft@gmail.com',
-    MAIL_PASSWORD = 'wowsar132',
+    MAIL_USERNAME = 'transaticka.project@gmail.com',
+    MAIL_PASSWORD = 'narrowpiano100',
 
     # PostgreSQL
     POSTGRESQL_PASSWORD = '123'
@@ -37,7 +37,7 @@ app.register_blueprint(index, url_prefix='/')
 
 if __name__ == '__main__':
     host = 'localhost'
-    port = '5000'
+    port = '5005'
     # When deployed to Heroku, host and port is provided as environment variables
     if 'HOST' in os.environ and 'PORT' in os.environ:
         host = os.environ['HOST']
