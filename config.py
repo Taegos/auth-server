@@ -40,7 +40,7 @@ class HerokuConfig(Config):
         self.DB_NAME = db.path[1:]
         self.DB_USER = db.username
         self.DB_PASSWORD = db.password
-        self.DB_HOST = db.host
+        self.DB_HOST = db.hostname
         self.DB_PORT = db.port
         self.DB_SSL = 'require'
 
