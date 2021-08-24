@@ -10,11 +10,11 @@ def _create_tables():
     from models.account import Account
     from peewee import IntegrityError
     try:
-        if not is_deployed_to_heroku():
-            get_database().drop_tables([Account])
+      #  if not is_deployed_to_heroku():
+        get_database().drop_tables([Account])
         get_database().create_tables([Account])
-    except IntegrityError:
-        pass
+    except IntegrityError as e:
+        print(e)
 
 def start_server(config: object) -> None:
     init_database(config) # Needs to come before anything else
