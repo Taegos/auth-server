@@ -1,10 +1,10 @@
-from flask import Blueprint, request, Response, current_app, jsonify
+from flask import Blueprint, request, current_app
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message, Mail
-from account_model import Account
-from token_gen import generate_token
-from peewee import DoesNotExist
+from peewee import DoesNotExist, IntegrityError
 import bcrypt
+
+from models.account import Account
 
 account = Blueprint('account', __name__)
 
@@ -13,20 +13,21 @@ def send_verification_email(email):
         email, 
         salt=current_app.config['SECURITY_PASSWORD_SALT']
     )
+    confirm_link = f"{request.host_url}account/confirm_mail/{token}"
     msg = Message("Welcome to Transaticka!",
-                  sender="transaticka@gmail.com",
+                  sender=current_app.config['MAIL_USERNAME'],
                   recipients=[email],
-                  html = f"Click to verify your email: {request.host_url}account/confirm_mail/{token}")
+                  html = f"Click to verify your email: {confirm_link}")
     mail = Mail(current_app)
     try:
         mail.send(msg)
         return True
-    except Exception as e:
-        print(e)
+    except Exception:
         return False
 
-@account.route('register', methods=['POST'])
-def register():
+@account.route('', methods=['POST'])
+def post():
+    print(request.json)
     try:
         email = request.json['email']
         password = request.json['password']
@@ -39,59 +40,32 @@ def register():
     if display_name == '':
         return "Display name cannot be empty", 400
 
-    # Delete unconfirmed accounts with same email or display name
-    Account.delete().where(
-        Account.display_name == display_name, 
-        Account.email_confirmed == False).execute()
-    
-    if send_verification_email(email):
-        try:
-            Account.create(
-                email=email,
-                password_hash=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
-                display_name=display_name,
-            )
-        except Exception:
-            return "Account with that email already exists", 400
-    else:
+    success = send_verification_email(email)
+    if not success:
         return "Failed to send verification mail", 400
 
-    return f"Registration succeeded, sent verification mail to '{email}'", 201
-
-@account.route('login', methods=['POST'])
-def login():
     try:
-        email = request.json['email']
-        password = request.json['password']
-    except KeyError:
-        return 'Request not formated correctly', 400
+        Account.create(
+            email=email,
+            display_name=display_name,
+            password_hash=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        )
+    except IntegrityError as e:
+        return "Email or display name already exists", 400
 
-    try:
-        account = Account.get(Account.email == email)
-        if not account.email_confirmed:
-            return "Account not confirmed yet", 400
-        password_hash = account.password_hash.encode('utf-8')
-        if bcrypt.hashpw(password.encode('utf-8'), password_hash) != password_hash:
-            return "Invalid email or password", 401
-    except DoesNotExist:
-        return "Invalid email or password", 401
-    
-    return jsonify(generate_token(account.email, account.display_name, account.is_admin)), 201
-
-def get_email_from_token(token):
-    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-    return serializer.loads(
-        token,
-        salt=current_app.config['SECURITY_PASSWORD_SALT'],
-        max_age=3600
-    )
+    return f"Registration succeeded, a verification mail was sent to '{email}'", 201
 
 @account.route('confirm_mail/<token>', methods=['GET'])
 def confirm_email(token):
     try:
-        email = get_email_from_token(token)
+        serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        email = serializer.loads(
+            token,
+            salt=current_app.config['SECURITY_PASSWORD_SALT'],
+            max_age=3600
+        )
     except Exception:
-        return 'Request not formated correctly', 400
+        return 'Invalid confirmation link', 400
     
     try:
         account = Account.get(Account.email == email)

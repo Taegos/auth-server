@@ -1,46 +1,39 @@
+from util import is_deployed_to_heroku
 from flask import Flask
-from blueprints.account import account
-from blueprints.index import index
-from account_model import Account
-import os
 
-app = Flask(__name__)
+from config import get_config
+from models.database import get_database, init_database
+from util.is_deployed_to_heroku import is_deployed_to_heroku
 
-app.config.update(
+
+def _create_tables(): 
+    from models.account import Account
+    from peewee import IntegrityError
+    try:
+        if not is_deployed_to_heroku():
+            get_database().drop_tables([Account])
+        get_database().create_tables([Account])
+    except IntegrityError:
+        pass
+
+def start_server(config: object) -> None:
+    init_database(config) # Needs to come before anything else
+
+    _create_tables()
+    from bootstrapper.create_accounts import create_example_accounts
+    create_example_accounts()
+
+    from blueprints.account import account
+    from blueprints.auth_token import auth_token
+    from blueprints.index import index
+
+    app = Flask(__name__)
+    app.register_blueprint(account, url_prefix='/account')
+    app.register_blueprint(auth_token, url_prefix='/auth_token')
+    app.register_blueprint(index, url_prefix='/')
     
-    # main config
-    SECRET_KEY = 'zxcasdq12312gteshdkea',
-    SECURITY_PASSWORD_SALT = 'xogyj30gmjew9o39tjksxmpfkltn4vy9s',
-    DEBUG = False,
-    #BCRYPT_LOG_ROUNDS = 13
-    #WTF_CSRF_ENABLED = True
-    #DEBUG_TB_ENABLED = False
-    #DEBUG_TB_INTERCEPT_REDIRECTS = False
-
-    # mail settings
-    MAIL_SERVER = 'smtp.googlemail.com',
-    MAIL_PORT = 465,
-    MAIL_USE_TLS = False,
-    MAIL_USE_SSL = True,
-
-    # gmail authentication
-    MAIL_USERNAME = 'transaticka.project@gmail.com',
-    MAIL_PASSWORD = 'narrowpiano100',
-
-    # PostgreSQL
-    POSTGRESQL_PASSWORD = '123'
-)
-
-
-app.register_blueprint(account, url_prefix='/account')
-app.register_blueprint(index, url_prefix='/')
-
+    app.config.from_object(config)
+    app.run(config.HOST, config.PORT)
+    
 if __name__ == '__main__':
-    host = 'localhost'
-    port = '5005'
-    # When deployed to Heroku, host and port is provided as environment variables
-    if 'HOST' in os.environ and 'PORT' in os.environ:
-        host = os.environ['HOST']
-        port = os.environ['PORT']
-        
-    app.run(host, port)
+    start_server(get_config())

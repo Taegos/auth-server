@@ -4,7 +4,7 @@
       table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
-        width: 35%;
+        
       }
 
       td, th {
@@ -26,8 +26,10 @@
       <tr>
         <th>Display Name</th>
         <th>Email</th>
-        <th>Confirmed</th>
-        <th>Admin</th>
+        <th>Is confirmed</th>
+        <th>Is admin</th>
+        <th>Created timestamp</th>
+        <th>UUID</th>
       </tr>
       {% for account in data.accounts %}
       <tr>
@@ -35,6 +37,8 @@
         <th>{{account.email}}</th>
         <th>{{account.email_confirmed}}</th>
         <th>{{account.is_admin}}</th>
+        <th>{{account.created_timestamp}}</th>
+        <th>{{account.uuid}}</th>
       </tr>
       {% endfor %}
     </table>
