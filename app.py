@@ -5,7 +5,6 @@ from config import get_config
 from models.database import get_database, init_database
 from util.is_deployed_to_heroku import is_deployed_to_heroku
 
-
 def _create_tables(): 
     from models.account import Account
     from peewee import IntegrityError
@@ -36,8 +35,5 @@ def create_app(config: object):
     app.run(config.HOST, config.PORT)
     return app
 
-def start():
-    return create_app(get_config())
-
 if __name__ == '__main__':
-    start()
+    create_app(get_config())
