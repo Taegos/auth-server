@@ -16,7 +16,7 @@ def _create_tables():
     except IntegrityError as e:
         print(e)
 
-def start_server(config: object) -> None:
+def create_app(config: object):
     init_database(config) # Needs to come before anything else
 
     _create_tables()
@@ -34,6 +34,10 @@ def start_server(config: object) -> None:
     
     app.config.from_object(config)
     app.run(config.HOST, config.PORT)
-    
+    return app
+
+def start():
+    return create_app(get_config())
+
 if __name__ == '__main__':
-    start_server(get_config())
+    start()
