@@ -6,7 +6,7 @@ from util.is_deployed_to_heroku import is_deployed_to_heroku
 class Config:
     def __init__(self) -> None:
           # Server (Overriden when deployed)
-        self.HOST: str = 'localhost'
+        self.HOST: str = '0.0.0.0'
         self.PORT: int = 5000
         
         # PostgreSQL (Overriden when deployed)
@@ -34,7 +34,7 @@ class Config:
 class HerokuConfig(Config):
     def __init__(self) -> None:
         super().__init__()
-        self.HOST = os.environ['HOST']
+
         self.PORT = os.environ['PORT']
         db = urlparse(os.environ.get('DATABASE_URL'))
         self.DB_NAME = db.path[1:]
