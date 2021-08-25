@@ -11,7 +11,7 @@ def _create_tables():
         get_database().drop_tables([Account])
         get_database().create_tables([Account])
     except Exception as e:
-        print("EXCEPTION" + e)
+        print("EXCEPTION " + str(e))
 
 def create_app(config: object):
     init_database(config) # Needs to come before anything else
