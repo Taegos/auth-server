@@ -1,6 +1,4 @@
 from flask import Flask
-
-from config import get_config
 from models.database import get_database, init_database
 from util.is_deployed_to_heroku import is_deployed_to_heroku
 
@@ -31,5 +29,5 @@ def create_app(config: object):
     app.register_blueprint(index, url_prefix='/')
     
     app.config.from_object(config)
-    app.run(config.HOST, config.PORT)
+    app.run()
     return app
