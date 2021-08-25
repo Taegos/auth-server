@@ -2,7 +2,7 @@ from peewee import PostgresqlDatabase
 
 _database: PostgresqlDatabase = None
 
-def init_database(config) -> None:
+def connect_database(config) -> None:
     global _database
     _database = PostgresqlDatabase(
         config.DB_NAME,

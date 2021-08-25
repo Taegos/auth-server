@@ -1,13 +1,12 @@
 import os
 from urllib.parse import urlparse
 
-from util.is_deployed_to_heroku import is_deployed_to_heroku
-
-class LocalConfig:
+class BaseConfig:
     def __init__(self) -> None:
-          # Server (Overriden when deployed)
+        # Server (Overriden when deployed)
         self.HOST: str = 'localhost'
         self.PORT: int = 5000
+        self.IS_DEPLOYED: bool = False
         
         # PostgreSQL (Overriden when deployed)
         self.DB_NAME: str = 'postgres'
@@ -31,11 +30,13 @@ class LocalConfig:
         self.MAIL_USERNAME = 'transaticka.project@gmail.com'
         self.MAIL_PASSWORD = 'narrowpiano100'
 
-class HerokuConfig(LocalConfig):
+class HerokuConfig(BaseConfig):
     def __init__(self) -> None:
         super().__init__()
 
         self.PORT = os.environ['PORT']
+        self.IS_DEPLOYED = True
+
         db = urlparse(os.environ.get('DATABASE_URL'))
         self.DB_NAME = db.path[1:]
         self.DB_USER = db.username
@@ -44,7 +45,7 @@ class HerokuConfig(LocalConfig):
         self.DB_PORT = db.port
         self.DB_SSL = 'require'
 
-#def get_config() -> Config:
-#    if is_deployed_to_heroku():
-#        return HerokuConfig()
-#    return Config()
+def get_config() -> BaseConfig:
+    if 'DYNO' in os.environ:
+        return HerokuConfig()
+    return BaseConfig()

@@ -1,25 +1,36 @@
 from flask import Flask
 
-from models.database import get_database, init_database
-from config import LocalConfig, HerokuConfig
+from models.database import get_database, connect_database
+from config import BaseConfig, HerokuConfig
 
-def _setup_db(): 
+def _populate_database(config: BaseConfig): 
     from models.account import Account
     from peewee import IntegrityError
-    from bootstrapper.create_accounts import create_example_accounts
+    from bootstrapper.create_accounts import create_accounts
 
     try:
-      #  if not is_deployed_to_heroku():
-        get_database().drop_tables([Account])
+        if not config.IS_DEPLOYED:
+            get_database().drop_tables([Account])
         get_database().create_tables([Account])
-        create_example_accounts()
+        create_accounts(
+            'Ghaf',
+            'Brind',
+            'Alchemight',
+            'Incantates',
+            'Dreadfuls',
+            'Burvalr',
+            'Khurkmostroll'
+        )
     except Exception as e:
-        print("EXCEPTION " + str(e))
+        pass
+    
+    get_database().create_tables([Account])
+    
 
 def create_app(config: object):
-    init_database(config) # Needs to come before anything else
+    connect_database(config) # Needs to come before anything else
 
-    _setup_db()
+    _populate_database(config)
 
     from blueprints.account import account
     from blueprints.auth_token import auth_token
@@ -37,5 +48,5 @@ def create_heroku_app():
     return create_app(HerokuConfig())
     
 if __name__ == '__main__':
-    app = create_app(LocalConfig())
+    app = create_app(BaseConfig())
     app.run()
