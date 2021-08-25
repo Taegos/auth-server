@@ -9,7 +9,7 @@ def _create_tables():
       #  if not is_deployed_to_heroku():
         get_database().drop_tables([Account])
         get_database().create_tables([Account])
-    except IntegrityError as e:
+    except Exception as e:
         print(e)
 
 def create_app(config: object):
