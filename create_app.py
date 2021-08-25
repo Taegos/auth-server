@@ -29,5 +29,5 @@ def create_app(config: object):
     app.register_blueprint(index, url_prefix='/')
     
     app.config.from_object(config)
-    app.run()
+    app.run(config.HOST, config.PORT)
     return app
