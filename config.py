@@ -3,10 +3,10 @@ from urllib.parse import urlparse
 
 from util.is_deployed_to_heroku import is_deployed_to_heroku
 
-class Config:
+class LocalConfig:
     def __init__(self) -> None:
           # Server (Overriden when deployed)
-        self.HOST: str = '0.0.0.0'
+        self.HOST: str = 'localhost'
         self.PORT: int = 5000
         
         # PostgreSQL (Overriden when deployed)
@@ -31,7 +31,7 @@ class Config:
         self.MAIL_USERNAME = 'transaticka.project@gmail.com'
         self.MAIL_PASSWORD = 'narrowpiano100'
 
-class HerokuConfig(Config):
+class HerokuConfig(LocalConfig):
     def __init__(self) -> None:
         super().__init__()
 
@@ -44,7 +44,7 @@ class HerokuConfig(Config):
         self.DB_PORT = db.port
         self.DB_SSL = 'require'
 
-def get_config() -> Config:
-    if is_deployed_to_heroku():
-        return HerokuConfig()
-    return Config()
+#def get_config() -> Config:
+#    if is_deployed_to_heroku():
+#        return HerokuConfig()
+#    return Config()

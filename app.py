@@ -1,8 +1,7 @@
-from re import A
 from flask import Flask
+
 from models.database import get_database, init_database
-from util.is_deployed_to_heroku import is_deployed_to_heroku
-from config import get_config
+from config import LocalConfig, HerokuConfig
 
 def _create_tables(): 
     from models.account import Account
@@ -17,7 +16,7 @@ def _create_tables():
 def create_app(config: object):
     init_database(config) # Needs to come before anything else
 
-    _create_tables()
+   # _create_tables()
    # from bootstrapper.create_accounts import create_example_accounts
    # create_example_accounts()
 
@@ -33,10 +32,9 @@ def create_app(config: object):
     app.config.from_object(config)
     return app
 
-def create_default_app():
-    return create_app(get_config())
-    app.run(config.HOST, config.PORT)
-
-if __name__ == '__main__':
-    app = create_default_app()
+def create_heroku_app():
+    return create_app(HerokuConfig())
     
+if __name__ == '__main__':
+    app = create_app(LocalConfig())
+    app.run()
