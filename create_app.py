@@ -16,8 +16,8 @@ def create_app(config: object):
     init_database(config) # Needs to come before anything else
 
     _create_tables()
-    from bootstrapper.create_accounts import create_example_accounts
-    create_example_accounts()
+   # from bootstrapper.create_accounts import create_example_accounts
+   # create_example_accounts()
 
     from blueprints.account import account
     from blueprints.auth_token import auth_token
