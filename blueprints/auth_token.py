@@ -18,7 +18,7 @@ def get():
     try:
         account = Account.get(Account.email == email)
         if not account.email_confirmed:
-            return "Account not confirmed yet", 400
+            return "Account not confirmed yet", 401
         password_hash = account.password_hash.encode('utf-8')
         if bcrypt.hashpw(password.encode('utf-8'), password_hash) != password_hash:
             return "Invalid email or password", 401

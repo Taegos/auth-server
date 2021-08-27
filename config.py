@@ -29,14 +29,13 @@ class BaseConfig:
         # Gmail login for sending account verification
         self.MAIL_USERNAME = 'transaticka.project@gmail.com'
         self.MAIL_PASSWORD = 'narrowpiano100'
+        
+        self.MAIL_VERIFICATION_HTML = "Welcome to Transaticka! Click on the link to confirm your email: \n{0}"
+        self.EXAMPLE_ACCOUNTS = ["pelle", "coolguy", "plutten", "gangstern", "korven"]
 
 class HerokuConfig(BaseConfig):
     def __init__(self) -> None:
         super().__init__()
-
-        self.PORT = os.environ['PORT']
-        self.IS_DEPLOYED = True
-
         db = urlparse(os.environ.get('DATABASE_URL'))
         self.DB_NAME = db.path[1:]
         self.DB_USER = db.username
@@ -45,7 +44,9 @@ class HerokuConfig(BaseConfig):
         self.DB_PORT = db.port
         self.DB_SSL = 'require'
 
-def get_config() -> BaseConfig:
-    if 'DYNO' in os.environ:
-        return HerokuConfig()
-    return BaseConfig()
+
+class TestingConfig(BaseConfig):
+    def __init__(self) -> None:
+        super().__init__()
+        self.MAIL_VERIFICATION_HTML = "{0}"
+        self.EXAMPLE_ACCOUNTS = []

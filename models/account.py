@@ -1,11 +1,12 @@
 import time
 import uuid
 from peewee import *
-from models.database import get_database
+
+proxy = Proxy()
 
 class BaseModel(Model):
     class Meta:
-        database = get_database()
+        database = proxy
 
 class Account(BaseModel):
     uuid = UUIDField(primary_key=True, default=uuid.uuid4)   
@@ -15,3 +16,4 @@ class Account(BaseModel):
     is_admin = BooleanField(default=False)
     email_confirmed = BooleanField(default=False)
     created_timestamp = IntegerField (default=time.time)
+
