@@ -20,12 +20,12 @@ def create_live_app():
         raise Exception("Cannot run live app, LIVE environment variable is not set")
     config: LiveConfig = LiveConfig()
     db.connect(config)
-    db.reset()
-    try:
-        for display_name in config.EXAMPLE_ACCOUNTS:
-           create_example_account(display_name)
-    except IntegrityError:
-        pass
+    #db.reset()
+   # try:
+   #     for display_name in config.EXAMPLE_ACCOUNTS:
+   #        create_example_account(display_name)
+   # except IntegrityError:
+    #    pass
     app = create_app()
     app.config.from_object(config)
     return app
