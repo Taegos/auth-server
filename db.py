@@ -19,5 +19,8 @@ def reset():
     global _db
     if _db == None:
         raise Exception("Not connected to db")
-    _db.drop_tables([Account])
-    _db.create_tables([Account])
+    try:
+        _db.drop_tables([Account])
+        _db.create_tables([Account])
+    except Exception:
+        pass

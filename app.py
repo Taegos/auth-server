@@ -20,6 +20,7 @@ def create_live_app():
         raise Exception("Cannot run live app, LIVE environment variable is not set")
     config: LiveConfig = LiveConfig()
     db.connect(config)
+    db.reset()
     try:
         for display_name in config.EXAMPLE_ACCOUNTS:
            create_example_account(display_name)
@@ -33,6 +34,7 @@ def create_local_app(config: LocalConfig):
     if os.environ.get("LIVE") is not None:
         raise Exception("Cannot run testing app, LIVE environment variable is set")
     db.connect(config)
+    db.reset
     app = create_app()
     app.config.from_object(config)
     return app
