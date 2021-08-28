@@ -41,6 +41,9 @@ def post():
     if len(display_name) < 4:
         return "Display name has to be atleast 4 characters long", 400
 
+    if not send_verification_email(email):
+        return "Failed to send verification mail", 400
+
     try:
         Account.create(
             email=email,
@@ -49,10 +52,6 @@ def post():
         )
     except IntegrityError as e:
         return "Email or display name already exists", 409
-
-    if not send_verification_email(email):
-        Account.delete().where(email==email)
-        return "Failed to send verification mail", 400
 
     return f"Registration succeeded, a verification mail was sent to '{email}'", 201
 

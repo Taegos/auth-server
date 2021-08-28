@@ -1,1 +1,1 @@
-web: gunicorn "app:create_heroku_app()"
+web: gunicorn "app:create_live_app()"

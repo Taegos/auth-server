@@ -1,23 +1,33 @@
+from typing import Set
+from test.settings import Settings
+from config import LocalConfig
 import time
 import pytest
 from multiprocessing import Process
 
 import db
-from config import BaseConfig, TestingConfig
-from app import create_app
+from app import create_local_app
 
-def _start_app(config: BaseConfig):
-    app = create_app(config)
-    app.run()
+def _start_app(config, host, port):
+    app = create_local_app(config)
+    app.run(host=host, port=port)
 
 @pytest.fixture(scope='session')
-def config():
-    config = TestingConfig()
-    process = Process(target=_start_app, args=(config, ))
+def settings():
+    config: LocalConfig = LocalConfig()
+    host = 'localhost'
+    port = 5001
+    process = Process(target=_start_app, args=(config, host, port))
     process.start()
     db.connect(config)
     time.sleep(1)
-    yield config
+
+    settings: Settings = Settings(
+        f"http://{host}:{port}",
+        config.MAIL_USERNAME
+    )
+
+    yield settings
     process.kill()
     db.reset()
 
